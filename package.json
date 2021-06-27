@@ -1,0 +1,19 @@
+{
+  "name": "shopify-firebase",
+  "version": "1.0.0",
+  "description": "Shopify application boilerplate - React, Firebase",
+  "main": "index.js",
+  "scripts": {
+    "start:client": "cd client && npm start",
+    "start:functions": "cd functions && npm run serve",
+    "build": "cd client && npm run build",
+    "ngrok:functions": "ngrok http 5001",
+    "deploy:client": "npm run build && firebase deploy --only hosting",
+    "deploy:functions": "firebase deploy --only functions",
+    "install:client": "cd client && npm install",
+    "install:functions": "cd functions && npm install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
