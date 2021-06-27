@@ -124,6 +124,55 @@ _The rest can sort of be done in any order_
     - Add a script to package.json file "populator:posts" : "node ./populators/add-fake-posts.js"
     - NOTE: The add-fake-posts.js file needed updating on its reqiure stateemnets to match the folder structure
 
+# **How It Works**
+
+## **Architecture Overview**
+
+- React front-end, built via create-react-app
+  - Firebase Web - Internal app authentication & CRUD operations
+    - Authentication - Firebase auth listener that triggers userReducer actions managed in `client\src\App.js`
+  - [Chakra UI](https://chakra-ui.com/docs/features/style-props) - Very flexible UI framework
+    - [Style Props](https://chakra-ui.com/docs/features/style-props) - Tailwindcss-like utility inline styling
+    - Theming extended from `client\src\Styles\theme.js`
+    - Create custom Components like `client\src\Styles\Components\NavLink.js`
+  - [React-Router-Dom](https://github.com/trm313/react-firebase/blob/main) - Defined in `client\src\Routes`
+  - [Redux-Toolkit](https://redux-toolkit.js.org/) - Authentication managed through Redux store
+    - Reducers: `client\src\Reducers`
+    - Initalized: `client\src\index.js`
+- Firebase Functions
+
+  - [What can I do with Cloud Functions?](https://firebase.google.com/docs/functions/use-cases?authuser=0)
+  - Trigger background functions (eg. `Firebase.auth.user().onCreate((user) => {...})`)
+  - Call functions directly from Client
+
+    ```jsx
+    // 1. `client\src\index.js` - Initialize Cloud Functions through Firebase
+    firebase.initializeApp({ ... });
+    var functions = firebase.functions();
+
+    // 2. `client\src\Components\TextComponent` - Load Firebase and call directly
+    import Firebase from "firebase/app";
+    var addMessage = Firebase.functions().httpsCallable('addMessage');
+
+    addMessage({ text: messageText })
+    .then((result) => {
+      // Read result of the Cloud Function.
+    var sanitizedMessage = result.data.text;
+    }).catch (error => {
+      const { code, message, details } = error;
+    })
+    ```
+
+  - Call functions via HTTP requests
+
+    `// https://firebase.google.com/docs/functions/http-events?authuser=0`
+
+  - Host API routes (Currently eg. `/api/test`)
+    - Note: Accessing cloud functions should generally be done through calling Firebase Functions client-side, but shows some flexibility
+
+- Firebase Firestore
+  - Document store
+
 # Appendix
 
 This create-release action is nifty: [https://github.com/actions/create-release](https://github.com/actions/create-release)
@@ -149,16 +198,14 @@ This create-release action is nifty: [https://github.com/actions/create-release]
 - Update it to store local variables for your dev environment
 - Use CLI to update environment variables in Firebase:
 
-### (Optional) Expose your local development environment to the web for easier mobile testing (directly on your device)
+### (Optional) Expose your local development environment to the web for easier mobile testing, or callbacks/domain authorizations
 
 - Run `npm run ngrok:client` from project root
 - Copy the https variant Forwarding list item (eg. [https://b15aae9a2cd1.ngrok.io](https://b15aae9a2cd1.ngrok.io/))
 - Update the Authorized Domains Lists for this domain:
   - Firebase > Authentication > Sign-in Methods > (scroll past the Sign-in Providers) > Authorized Domains > Add domain (eg. [b15aae9a2cd1.ngrok.io](http://b15aae9a2cd1.ngrok.io/))
-  - TinyMCE > Login to [tiny.cloud](http://tiny.cloud) > Approved Domains > paste domain (eg. [b15aae9a2cd1.ngrok.io](http://b15aae9a2cd1.ngrok.io/))
-  - (maybe) Shopify App
 
-# ORIGINAL README - Keeping in case anything's useful
+# ORIGINAL README - Keeping temporarily in case anything's useful
 
 # Setup
 
@@ -208,61 +255,3 @@ Environment variables for consumption by Firebase Functions:
 `firebase functions:config:set private.env="dev" stripe.key="[stripe_key]" stripe.secret="[stripe_secret]"`
 
 `firebase functions:config:set private.key="YOUR API KEY" project.id="YOUR CLIENT ID" client.email="YOUR CLIENT EMAIL"`
-
-# How It Works
-
-## Architecture Overview
-
-- React front-end, built via create-react-app
-  - Firebase Web - Internal app authentication & CRUD operations
-    - Authentication - Firebase auth listener that triggers userReducer actions managed in `client\src\App.js`
-  - [Chakra UI](https://chakra-ui.com/docs/features/style-props) - Very flexible UI framework
-    - [Style Props](https://chakra-ui.com/docs/features/style-props) - Tailwindcss-like utility inline styling
-    - Theming extended from `client\src\Styles\theme.js`
-    - Create custom Components like `client\src\Styles\Components\NavLink.js`
-  - [React-Router-Dom]() - Defined in `client\src\Routes`
-  - [Redux-Toolkit](https://redux-toolkit.js.org/) - Authentication managed through Redux store
-    - Reducers: `client\src\Reducers`
-    - Initalized: `client\src\index.js`
-- Firebase Functions
-
-  - [What can I do with Cloud Functions?](https://firebase.google.com/docs/functions/use-cases?authuser=0)
-  - Trigger background functions (eg. `Firebase.auth.user().onCreate((user) => {...})`)
-  - Call functions directly from Web
-
-    ```
-    // 1. `client\src\index.js` - Initialize Cloud Functions through Firebase
-    firebase.initializeApp({ ... });
-    var functions = firebase.functions();
-
-    // 2. `client\src\Components\TextComponent` - Load Firebase and call directly
-    import Firebase from "firebase/app";
-    var addMessage = Firebase.functions().httpsCallable('addMessage');
-
-    addMessage({ text: messageText })
-    .then((result) => {
-      // Read result of the Cloud Function.
-    var sanitizedMessage = result.data.text;
-    }).catch (error => {
-      const { code, message, details } = error;
-    })
-
-    ```
-
-  - Call functions via HTTP requests
-
-    ```
-    // https://firebase.google.com/docs/functions/http-events?authuser=0
-
-    ```
-
-  - Host API routes (Currently eg. `/api/test`)
-    - Note: Accessing cloud functions should generally be done through calling Firebase Functions client-side, but shows some flexibility
-
-- Firebase Firestore
-  - Document store
-- Integrations
-
-# Integrations
-
-Coming Soon
