@@ -1,8 +1,10 @@
 import React from "react";
 import { Box, Flex, Icon } from "@chakra-ui/react";
 import { MdMenu, MdClose } from "react-icons/md";
+
 import NavLink from "../Shared/NavLink";
 import AuthButtons from "../Auth/AuthButtons";
+import ThemeToggle from "../ThemeToggle";
 
 const Header = (props) => {
   const [show, setShow] = React.useState(false);
@@ -62,6 +64,7 @@ const Header = (props) => {
           <NavLink to='/pricing' variant='headerSecondary'>
             Pricing
           </NavLink>
+          <ThemeToggle />
           <Box mb={{ base: 0, sm: 0 }} mr={{ base: 0, sm: 0 }} display='block'>
             <AuthButtons />
           </Box>
