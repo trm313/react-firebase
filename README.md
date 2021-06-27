@@ -15,29 +15,23 @@ Clone project: `git clone [https://github.com/trm313/react-firebase.git](https:/
 - From project root, run `npm run install:functions`
 - Run `npm run start:functions` to
 
-Install dependencies:
-
-- run `npm install` in client and functions folder
-  - Or use `npm run install:client` and `npm run install:functions` from root
-- (optional) run npm install in scripts folder
-
-Create Firebase project
+### Create Firebase project
 
 - Create project name, eg. ProjectName
 - (optional) Enable Google Analytics for this project
 
-Add Firebase Authentication service:
+### Add Firebase Authentication service:
 
 - Authentication → Sign-in providers → Google → Edit → Enable
 
-Add Firestore Database service:
+### Add Firestore Database service:
 
 - Start in production mode (recommended)
 - Select Firestore location (this can't be changed later)
 - Update Firestore Rules
   - Copy contents from firestore.rules and go to Firestore → Rules → paste contents → Publish
 
-Add Firebase Functions service
+### Add Firebase Functions service
 
 - Upgrade to Blaze (Pay as you go)
   - Note: There is still a free tier with Blaze, and you're only charged if you go above it
@@ -48,7 +42,7 @@ Add Firebase Functions service
     - Why? This boilerplate includes all of the files you'd be adding here for those services, with some basic configuration already (that help show examples or give a good starting point)
   - If you aren't going to install anything else, just click through this 2-step wizard and click Done and it'll bring you to your Functions page
 
-Add Firebase Hosting service:
+### Add Firebase Hosting service:
 
 - Project Overview > Add App > Web
 - Register app
@@ -108,27 +102,6 @@ jobs:
 
 _The rest can sort of be done in any order_
 
-### Enable deployment pipeline through Github
-
-- Create or update a Github secret called FIREBASE*SERVICE_ACCOUNT*<APPNAME>
-  - Go to Firebase console > Project Settings > Service Accounts > Node.js > Generate new private key > Download file
-  - Go to Github repo > Settings > Secrets > New Repository Secret
-    - Name it FIREBASE*SERVICE_ACCOUNT*<APPNAME>
-    - Paste the entire contents of the service account .json file into the value field
-- Add the normally not committed .github folder into your git repo:
-  - `git add .github`
-  -
-- Any push into main branch will now trigger the pipeline defined in `.github\workflows\main.yml` which will have Github install all dependencies, build the client, and deploy to hosting (only)
-- For now, to deploy functions, trigger `npm run deploy:functions` from local
-  - TODO: Look into `w9jds/firebase-action@master` here - [https://medium.com/mainlycoding-com/automate-firebase-functions-deployment-with-github-actions-ci-a0eb10fa308d](https://medium.com/mainlycoding-com/automate-firebase-functions-deployment-with-github-actions-ci-a0eb10fa308d)
-  -
-
-### Set any additional Environment variables
-
-- Copy/rename functions/.runtimeconfig.example.json to .runtimeconfig.json
-- Update it to store local variables for your dev environment
-- Use CLI to update environment variables in Firebase:
-
 ## Scripts Folder
 
 ### (Optional) Set up Scripts functionality
@@ -154,6 +127,27 @@ _The rest can sort of be done in any order_
 # Appendix
 
 This create-release action is nifty: [https://github.com/actions/create-release](https://github.com/actions/create-release)
+
+### Enable deployment pipeline through Github
+
+- Create or update a Github secret called FIREBASE*SERVICE_ACCOUNT*<APPNAME>
+  - Go to Firebase console > Project Settings > Service Accounts > Node.js > Generate new private key > Download file
+  - Go to Github repo > Settings > Secrets > New Repository Secret
+    - Name it FIREBASE*SERVICE_ACCOUNT*<APPNAME>
+    - Paste the entire contents of the service account .json file into the value field
+- Add the normally not committed .github folder into your git repo:
+  - `git add .github`
+  -
+- Any push into main branch will now trigger the pipeline defined in `.github\workflows\main.yml` which will have Github install all dependencies, build the client, and deploy to hosting (only)
+- For now, to deploy functions, trigger `npm run deploy:functions` from local
+  - TODO: Look into `w9jds/firebase-action@master` here - [https://medium.com/mainlycoding-com/automate-firebase-functions-deployment-with-github-actions-ci-a0eb10fa308d](https://medium.com/mainlycoding-com/automate-firebase-functions-deployment-with-github-actions-ci-a0eb10fa308d)
+  -
+
+### Set any additional Environment variables
+
+- Copy/rename functions/.runtimeconfig.example.json to .runtimeconfig.json
+- Update it to store local variables for your dev environment
+- Use CLI to update environment variables in Firebase:
 
 ### (Optional) Expose your local development environment to the web for easier mobile testing (directly on your device)
 
@@ -203,7 +197,7 @@ This create-release action is nifty: [https://github.com/actions/create-release]
 ## Deploy Frontend
 
 Files must build to a deployment directory (default is "public", changed to "client/build")
-Deploy files to hosting via `firebase deploy --only hosting:shopify-firebase-boilerplate`
+Deploy files to hosting via `firebase deploy --only hosting:<project-name>`
 
 ## Environment variables
 
@@ -268,7 +262,6 @@ Environment variables for consumption by Firebase Functions:
 - Firebase Firestore
   - Document store
 - Integrations
-  - Shopify - This boilerplate can serve as a grab-and-go Shopify Public App
 
 # Integrations
 
